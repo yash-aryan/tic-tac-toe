@@ -1,4 +1,4 @@
 # tic-tac-toe
-This is a project I worked on while doing "The Odin Project"
+This is a project I worked on while doing "The Odin Project". Features a working prototype of tic-tac-toe game.
 
-Currently playable via console only, gui version coming soon!
+- <a href="https://yash-aryan.github.io/tic-tac-toe/" target="_blank">View Live Demo Here</a>
