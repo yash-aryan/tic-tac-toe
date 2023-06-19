@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,15 +8,31 @@
   <script src="./scripts.js" defer></script>
   <title>Tic-Tac-Toe Game</title>
 </head>
+
 <body>
   <div class="wrapper">
     <div class="header">
       <h1>tic-tac-toe</h1>
     </div>
     <div class="article">
-      <div class="status">
-        <h2>X - <span class="x-score"></span></h2>
-        <h2>O - <span class="o-score"></span></h2>
+      <div class="status-container">
+        <div id="x-turn">
+          <h2>X</h2>
+        </div>
+        <div id="o-turn">
+          <h2>O</h2>
+        </div>
+      </div>
+      <div class="bg-overlay"></div>
+      <div class="restart-modal">
+        <h2 id="result-status">dsa</h2>
+        <button class="btn-restart">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <title>Restart Game</title>
+            <path
+              d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2M18 11H13L14.81 9.19A3.94 3.94 0 0 0 12 8A4 4 0 1 0 15.86 13H17.91A6 6 0 1 1 12 6A5.91 5.91 0 0 1 16.22 7.78L18 6Z" />
+          </svg>
+        </button>
       </div>
       <div class="grid-container">
         <div class="grid-cell"></div>
@@ -31,4 +48,5 @@
     </div>
   </div>
 </body>
+
 </html>

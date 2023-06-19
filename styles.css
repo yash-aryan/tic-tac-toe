@@ -5,12 +5,13 @@
 }
 
 :root {
+	--color-neutral: #ddd;
   --grid-cell-size: 10rem;
   --grid-cell-border: 1px solid #b3b3b3;
 }
 
 .body {
-  background-color: #ddd;
+  background-color: var(--color-neutral);
 }
 
 .wrapper,
@@ -25,9 +26,58 @@
 	max-height: 100vh;
 }
 
-.status {
+.status-container {
 	display: flex;
 	justify-content: space-around;
+}
+
+.status-container > div,
+.result-status {
+	display: flex;
+	justify-content: center;
+}
+
+.status-container > div {
+	width: 7rem;
+}
+
+.current-turn {
+	border-bottom: 2px solid black;
+}
+
+.bg-overlay {
+	position: fixed;
+	display: none;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.7);
+	z-index: 3;
+}
+
+.restart-modal {
+	position: fixed;
+	display: none;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
+	top: 2%;
+	left: 50%;
+	transform: translate(-50%, 0%);
+	z-index: 5;
+	background-color: var(--color-neutral);
+	min-width: 50%;
+	min-height: 20%;
+}
+
+.btn-restart {
+	width: 5rem;
+	background-color: var(--color-neutral);
+	border: none;
+	cursor: pointer;
 }
 
 .grid-container {
