@@ -15,17 +15,27 @@
       <h1>tic-tac-toe</h1>
     </div>
     <div class="article">
+      <div class="bg-overlay"></div>
+      <div class="pre-game-modal">
+        <h2>Let's play tic-tac-toe!</h2>
+        <form action="">
+          <label>Enter Player 1 Name<input type="text" name="name" id="player1-name" autocomplete="username"
+              required></label>
+          <label>Enter Player 2 Name<input type="text" name="name" id="player2-name" autocomplete="username"
+              required></label>
+          <button id="btn-setName">Start Game!</button>
+        </form>
+      </div>
       <div class="status-container">
         <div id="x-turn">
-          <h2>X</h2>
+          <h2></h2>
         </div>
         <div id="o-turn">
-          <h2>O</h2>
+          <h2></h2>
         </div>
       </div>
-      <div class="bg-overlay"></div>
-      <div class="restart-modal">
-        <h2 id="result-status">dsa</h2>
+      <div class="result-modal">
+        <h2 id="result-status"></h2>
         <button class="btn-restart">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <title>Restart Game</title>
@@ -46,6 +56,14 @@
         <div class="grid-cell"></div>
       </div>
     </div>
+    <footer class="footer">
+      <a href="https://github.com/yash-aryan/" target="_blank">Copyright ©
+        <script>
+          document.write(new Date().getFullYear())
+        </script>
+        yash-aryan
+      </a>
+    </footer>
   </div>
 </body>
 

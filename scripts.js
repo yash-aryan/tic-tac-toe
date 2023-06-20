@@ -1,156 +1,191 @@
-// Custom Module Function
 "use strict";
-const gameBoard = (() => {
-	const _gridCells = Array.from(document.querySelectorAll(".grid-cell"));
-	const _restartModal = document.querySelector(".restart-modal");
-	const _bgOverlay = document.querySelector(".bg-overlay");
+// Entire Code in a Anonymous IIFE
+(function () {
+	// Module Function
+	const Modal = (() => {
+		const _bgOverlay = document.querySelector(".bg-overlay");
+		const _formModal = document.querySelector(".pre-game-modal");
+		const _resultModal = document.querySelector(".result-modal");
+		document
+			.querySelector(".btn-restart")
+			.addEventListener("click", _resetGame);
 
-	const _board = ["", "", "", "", "", "", "", "", ""];
-	const _player1 = { name: "player1", marker: "X" };
-	const _player2 = { name: "player2", marker: "O" };
-	let _currentPlayer = _player1;
-	let _outcome;
-	_dispTurnStatus();
+		function _close() {
+			_formModal.style.display = "none";
+			_bgOverlay.style.display = "none";
+			_resultModal.style.display = "none";
+		}
 
+		function _setName() {
+			document.forms[0].addEventListener("submit", e => {
+				const p1Input = document.querySelector("#player1-name");
+				const p2Input = document.querySelector("#player2-name");
+				e.preventDefault();
+				if (p1Input.value.trim() !== "") player1.name = p1Input.value;
+				else player1.name = "Player1";
+				if (p2Input.value.trim() !== "") player2.name = p2Input.value;
+				else player2.name = "Player2";
+				dispTurnStatus();
+				_close();
+			});
+		}
+
+		// This function resets the entire game
+		function _resetGame() {
+			for (let i = 0; i < board.length; i++) {
+				board[i] = "";
+			}
+			currentPlayer = player1;
+			gridCells.forEach(element =>
+				element.classList.remove("markedX", "markedO")
+			);
+			dispTurnStatus();
+			_close();
+		}
+
+		// This function opens the pre-game form modal
+		function openForm() {
+			_formModal.style.display = "flex";
+			_bgOverlay.style.display = "block";
+			_setName();
+		}
+
+		// This function opens the post-game result modal
+		function openResult(outcome) {
+			dispResultStatus(outcome);
+			_resultModal.style.display = "flex";
+			_bgOverlay.style.display = "block";
+		}
+
+		return {
+			openResult,
+			openForm
+		};
+	})();
+
+	// Initial Variables
+	const gridCells = Array.from(document.querySelectorAll(".grid-cell"));
+	const player1 = { marker: "X" };
+	const player2 = { marker: "O" };
+	const board = ["", "", "", "", "", "", "", "", ""];
+	Modal.openForm();
+	let currentPlayer = player1;
+
+	// This IIFE starts the game, by allowing user to set markers on click
 	(function () {
-		_gridCells.forEach(element => {
+		gridCells.forEach(element => {
 			element.addEventListener("click", _setMarkerOnCell);
 		});
 
 		function _setMarkerOnCell() {
-			let clickedIndex = _gridCells.indexOf(this);
-			_setMarker(clickedIndex);
+			const _clickedIndex = gridCells.indexOf(this);
+			setMarker(_clickedIndex);
 		}
 	})();
 
-	function _setMarker(index) {
+	function setMarker(index) {
 		// Is the grid cell already filled? If yes then exit the function
-		if (_isGridCellTaken(index)) return;
+		if (isGridCellTaken(index)) return;
 		// Add marker class in DOM, which holds svg for Xs & Os
-		switch (_currentPlayer.marker) {
+		switch (currentPlayer.marker) {
 			case "X":
-				_gridCells[index].classList.add("markedX");
+				gridCells[index].classList.add("markedX");
 				break;
 			case "O":
-				_gridCells[index].classList.add("markedO");
+				gridCells[index].classList.add("markedO");
 				break;
 		}
-		// Add marker to _board Array as well
-		_board[index] = _currentPlayer.marker;
+		// Add marker to board Array as well
+		board[index] = currentPlayer.marker;
 		// Change current player
-		if (_currentPlayer === _player1) _currentPlayer = _player2;
-		else _currentPlayer = _player1;
+		if (currentPlayer === player1) currentPlayer = player2;
+		else currentPlayer = player1;
 		// After marker is set, following functions are called
-		_checkForOutcome();
-		_dispTurnStatus();
+		checkForOutcome();
+		dispTurnStatus();
 	}
 
-	function _isGridCellTaken(index) {
-		if (_board[index] !== "") return true;
+	function isGridCellTaken(index) {
+		if (board[index] !== "") return true;
 		else return false;
 	}
 
-	function _checkForOutcome() {
-		if (_board.every(element => element !== "")) {
-			_outcome = "TIE";
-			_openModal();
+	function checkForOutcome() {
+		if (board.every(element => element !== "")) {
+			Modal.openResult("TIE");
 		} else {
-			_checkForWinner();
+			checkForWinner();
 		}
 	}
 
 	// Check if someone won by checking patterns
-	function _checkForWinner() {
+	function checkForWinner() {
 		const _getWinner = index => {
-			switch (_board[index]) {
+			switch (board[index]) {
 				case "X":
-					_outcome = _player1.marker;
+					Modal.openResult("X");
 					break;
 				case "O":
-					_outcome = _player2.marker;
+					Modal.openResult("O");
 					break;
 			}
-			_openModal();
 		};
 		// Check for matching patterns for:-
 		// Top & Left
 		if (
-			((_board[0] === _board[1] && _board[0] === _board[2]) ||
-				(_board[0] === _board[3] && _board[0] === _board[6])) &&
-			_board[0] !== ""
+			((board[0] === board[1] && board[0] === board[2]) ||
+				(board[0] === board[3] && board[0] === board[6])) &&
+			board[0] !== ""
 		)
 			_getWinner(0);
 		// Bottom & Right
 		else if (
-			((_board[8] === _board[7] && _board[8] === _board[6]) ||
-				(_board[8] === _board[5] && _board[8] === _board[2])) &&
-			_board[8] !== ""
+			((board[8] === board[7] && board[8] === board[6]) ||
+				(board[8] === board[5] && board[8] === board[2])) &&
+			board[8] !== ""
 		)
 			_getWinner(8);
 		// Middle & Diagonals
 		else if (
-			((_board[2] === _board[4] && _board[2] === _board[6]) ||
-				(_board[0] === _board[4] && _board[0] === _board[8]) ||
-				(_board[3] === _board[4] && _board[3] === _board[5]) ||
-				(_board[1] === _board[4] && _board[1] === _board[7])) &&
-			_board[4] !== ""
+			((board[2] === board[4] && board[2] === board[6]) ||
+				(board[0] === board[4] && board[0] === board[8]) ||
+				(board[3] === board[4] && board[3] === board[5]) ||
+				(board[1] === board[4] && board[1] === board[7])) &&
+			board[4] !== ""
 		)
 			_getWinner(4);
 	}
 
-	function _openModal() {
-		_dispResultStatus();
-		_restartModal.style.display = "flex";
-		_bgOverlay.style.display = "block";
-		document
-			.querySelector(".btn-restart")
-			.addEventListener("click", _resetGame);
-	}
+	function dispTurnStatus() {
+		const _headerX = document.querySelector("#x-turn");
+		const _headerO = document.querySelector("#o-turn");
 
-	function _closeModal() {
-		_restartModal.style.display = "none";
-		_bgOverlay.style.display = "none";
-	}
-
-	function _resetGame() {
-		// reset _board Array
-		for (let i = 0; i < _board.length; i++) {
-			_board[i] = "";
-		}
-		_currentPlayer = _player1;
-		_gridCells.forEach(element => {
-			element.classList.remove("markedX", "markedO");
-		});
-		_dispTurnStatus();
-		_closeModal();
-	}
-
-	function _dispTurnStatus() {
-		const headerX = document.querySelector("#x-turn");
-		const headerO = document.querySelector("#o-turn");
-		switch (_currentPlayer.marker) {
+		_headerX.children[0].textContent = `X (${player1.name})`;
+		_headerO.children[0].textContent = `O (${player2.name})`;
+		// Adds indicator for current player
+		switch (currentPlayer.marker) {
 			case "X":
-				headerO.classList.remove("current-turn");
-				headerX.classList.add("current-turn");
+				_headerO.classList.remove("current-turn");
+				_headerX.classList.add("current-turn");
 				break;
 			case "O":
-				headerX.classList.remove("current-turn");
-				headerO.classList.add("current-turn");
+				_headerX.classList.remove("current-turn");
+				_headerO.classList.add("current-turn");
 				break;
 		}
 	}
 
-	function _dispResultStatus() {
-		const headerResult = document.querySelector("#result-status");
-		switch (_outcome) {
+	function dispResultStatus(outcome) {
+		const _headerResult = document.querySelector("#result-status");
+		switch (outcome) {
 			case "X":
-				headerResult.textContent = `The winner is ${_player1.name}!`;
+				_headerResult.textContent = `The winner is ${player1.name}!`;
 				break;
 			case "O":
-				headerResult.textContent = `The winner is ${_player2.name}!`;
+				_headerResult.textContent = `The winner is ${player2.name}!`;
 				break;
 			case "TIE":
-				headerResult.textContent = `It's a tie!`;
+				_headerResult.textContent = `It's a tie!`;
 				break;
 		}
 	}
